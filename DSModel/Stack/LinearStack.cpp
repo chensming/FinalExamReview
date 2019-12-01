@@ -7,8 +7,10 @@ template<class T>
 class Stack
 {
 public:
-	Stack(); 
+	Stack();
 	~Stack();
+	Stack(Stack<T>& s2);
+	Stack<T>& operator=(const Stack<T>& s2);
 	bool IsEmpty();
 	bool IsFull();
 	bool GetTop(T& x);
@@ -30,12 +32,39 @@ Stack<T>::Stack()
 }
 
 
+template<class T>
+Stack<T>::Stack(Stack<T>& s2)
+{
+	CurrentSize = s2.CurrentSize;
+	for (int i = 0; i < CurrentSize; i++)
+	{
+		data[i] = s2.data[i];
+	}
+}
+
 
 template<class T>
 Stack<T>::~Stack()
 {
 	CurrentSize = 0;
 }
+
+
+
+template<class T>
+Stack<T>& Stack<T>::operator=(const Stack<T>& s2)
+{
+	if (this != &s2)
+	{
+		CurrentSize = s2.CurrentSize;
+		for (int i = 0; i < CurrentSize; i++)
+		{
+			data[i] = s2.data[i];
+		}
+	}
+	return *this;
+}
+
 
 
 template<class T>
@@ -108,6 +137,7 @@ void Stack<T>::PrintFBottomToTop()
 	{
 		cout << data[i] << " ";
 	}
+	cout << endl;
 }
 
 
@@ -133,7 +163,7 @@ void IsGetTop(Stack<T>& a, T& x)
 	if (a.GetTop(x))
 	{
 		cout << "getTop " << x << " 成功" << endl;
-	} 
+	}
 	else
 	{
 		cout << "Stack is empty! So getTop failed!" << endl;
@@ -196,6 +226,7 @@ void PrintIsFull(Stack<T>& a)
 int main()
 {
 	Stack<int> a;
+	Stack<int> b;
 	int x = 0;
 	PrintIsEmpty(a);
 	cout << endl;
@@ -205,7 +236,7 @@ int main()
 	IsPopSucc(a, x);
 
 
-	
+
 	IsPushSucc(a, 6);
 	IsPushSucc(a, 34);
 	IsPushSucc(a, 75);
@@ -213,18 +244,36 @@ int main()
 	IsPushSucc(a, -50);
 	IsPushSucc(a, 800);
 	IsPushSucc(a, 67);
+
+	cout << endl << endl;
+	cout << "Stack<int> c(a);" << endl;
+	Stack<int>c(a);
+	cout << endl;
+	
 	IsPushSucc(a, -92);
-	IsPushSucc(a, 167); 
+	IsPushSucc(a, 167);
 	IsPushSucc(a, 485);
 	IsPushSucc(a, 605);
 	IsPushSucc(a, 735);
 
+	cout << endl << "b = a" << endl << endl;
+	b = a;
+
 	cout << endl;
 	IsGetTop(a, x);
-	cout << "pop()..." << endl;
+	cout << "pop()...   删掉" << x << endl;
 	a.Pop();
 	IsPopSucc(a, x);
-	a.PrintFBottomToTop();	
-	
+
+	cout << endl << endl;
+	cout << endl << "a.PrintFBottomToTop();" << endl;
+	a.PrintFBottomToTop();
+
+	cout << endl << "b.PrintFBottomToTop();" << endl;
+	b.PrintFBottomToTop();
+
+	cout << endl << "b.PrintFBottomToTop();" << endl;
+	c.PrintFBottomToTop();
+
 	cout << endl;
 }

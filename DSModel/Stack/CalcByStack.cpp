@@ -9,6 +9,8 @@ class Stack
 public:
 	Stack(); 
 	~Stack();
+	Stack(Stack<T>& s2);
+	Stack<T>& operator=(const Stack<T>& s2);
 	bool IsEmpty();
 	bool IsFull();
 	bool GetTop(T& x);
@@ -36,6 +38,41 @@ Stack<T>::~Stack()
 {
 	CurrentSize = 0;
 }
+
+
+
+template<class T>
+Stack<T>::Stack(Stack<T>& s2)
+{
+	CurrentSize = s2.CurrentSize;
+	for (int i = 0; i < CurrentSize; i++)
+	{
+		data[i] = s2.data[i];
+	}
+}
+
+
+
+
+template<class T>
+Stack<T>& Stack<T>::operator=(const Stack<T>& s2)
+{
+	if (this != &s2)
+	{
+		CurrentSize = s2.CurrentSize;
+		for (int i = 0; i < CurrentSize; i++)
+		{
+			data[i] = s2.data[i];
+		}
+	}
+	return *this;
+}
+
+
+
+
+
+
 
 
 template<class T>
