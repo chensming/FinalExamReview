@@ -57,8 +57,8 @@ public class Notify {
         taskQueue.addTask("Jack");
         Thread.sleep(1000);
 
-        worker.interrupt();
-        worker.join();
+        worker.interrupt();   //中断线程
+        worker.join();   //等待线程死亡
         System.out.println("end of program");
     }
 }
