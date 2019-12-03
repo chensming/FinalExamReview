@@ -1,0 +1,12 @@
+[
+{
+  "directory": "D:/Desktop/homework OfSophomore/DataSHomework/week1/build",
+  "command": "C:\\mingw64\\bin\\g++.exe   @CMakeFiles/cmake-test.dir/includes_CXX.rsp -g   -std=gnu++17 -o CMakeFiles\\cmake-test.dir\\Src\\main.cpp.obj -c \"D:\\Desktop\\homework OfSophomore\\DataSHomework\\week1\\Src\\main.cpp\"",
+  "file": "D:/Desktop/homework OfSophomore/DataSHomework/week1/Src/main.cpp"
+},
+{
+  "directory": "D:/Desktop/homework OfSophomore/DataSHomework/week1/build",
+  "command": "C:\\mingw64\\bin\\g++.exe   @CMakeFiles/cmake-test.dir/includes_CXX.rsp -g   -std=gnu++17 -o CMakeFiles\\cmake-test.dir\\Src\\studUnit.cpp.obj -c \"D:\\Desktop\\homework OfSophomore\\DataSHomework\\week1\\Src\\studUnit.cpp\"",
+  "file": "D:/Desktop/homework OfSophomore/DataSHomework/week1/Src/studUnit.cpp"
+}
+]

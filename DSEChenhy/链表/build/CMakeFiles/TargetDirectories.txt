@@ -1,0 +1,3 @@
+D:/Desktop/homework OfSophomore/DataSHomework/week2/build/CMakeFiles/cmake-test.dir
+D:/Desktop/homework OfSophomore/DataSHomework/week2/build/CMakeFiles/edit_cache.dir
+D:/Desktop/homework OfSophomore/DataSHomework/week2/build/CMakeFiles/rebuild_cache.dir
