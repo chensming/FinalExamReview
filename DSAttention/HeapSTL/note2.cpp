@@ -20,7 +20,7 @@ bool cmp(const w& a, const w& b)
 
 int main()
 {
-	w test[10] = { {1,'a'},{5,'e'},{2,'b'},{6,'f'},{3,'c'},{7,'g'},{8,'h'},{4,'d'},{9,'i'},{0,'j'} };
+	w test[10] = { {1,'a'},{5,'e'},{2,'b'},{6,'f'},{3,'c'},{7,'g'},{8,'h'},{4,'d'},{9,'i'},{10,'j'} };
 	vector<w> v1(test, test + 10);
 
 	make_heap(v1.begin(), v1.end(), cmp);
