@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
-using namespace std;
 #include <fstream>
+using namespace std;
 
 struct student
 {
