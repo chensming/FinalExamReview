@@ -22,8 +22,9 @@ void save_to_file()
             cout << c[i];
         }
     }
-    cout << endl;
+    
     outfile.close();
+    cout << endl;
 }
 
 void get_from_file()
@@ -72,8 +73,9 @@ void display_file(char * filename)
     {
         cout.put(ch);
     }
-    cout<<endl;
+    
     infile.close();
+    cout<<endl;
 }
 
 
