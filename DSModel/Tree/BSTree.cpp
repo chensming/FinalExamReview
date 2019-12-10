@@ -1,12 +1,12 @@
 #include<iostream>
-
+#include<stack>
 using namespace std;
 
 template<class T>
 struct BSTNode {
 	T data;
 	BSTNode<T>* leftchild, * rightchild;
-	BSTNode(): leftchild(0),rightchild(0){}
+	BSTNode() : leftchild(0), rightchild(0) { data = T(); }
 	BSTNode(T d) : data(d), leftchild(0), rightchild(0){}
 	~BSTNode(){}
 
@@ -18,7 +18,7 @@ struct BSTNode {
 template<class T>
 class BST {
 public:
-	BST() :root(0){}
+	BST() :root(0) { Refvalue = T(); }
 	BST(T value);
 	~BST() { makeEmpty(); }
 
@@ -36,14 +36,19 @@ public:
 	bool Insert(const T x, BSTNode<T>*& ptr);
 	bool InsertNonRecursion(const T x);
 	
-	//递归与非递归删除
+	//递归删除
 	bool Remove(const T x);
 	bool Remove(const T x, BSTNode<T>*& ptr);
-	bool RemoveNonRecursion(const T x);
+	//bool RemoveNonRecursion(const T x);非递归比较麻烦,这里没写
 
 	//广义表输出二叉树
 	void PrintBinTree();
 	void PrintBinTree(BSTNode<T>* BT);
+
+	//中序递归与非递归遍历输出
+	void InOrder();
+	void InOrder(BSTNode<T>* subtree);
+	void InOrderNonRecursion();
 
 private:
 	BSTNode<T>* root;
@@ -260,51 +265,6 @@ bool BST<T>::Remove(const T x, BSTNode<T>*& ptr)
 
 
 
-template<class T>
-bool BST<T>::RemoveNonRecursion(const T x)
-{
-	BSTNode<T>*& p = root, *temp;
-	//BSTNode<T>* parent = 0;
-	while (p != 0)
-	{
-		if (x == p->data)
-			break;
-		else if (x >p->data)
-		{
-			//parent = p;
-			p = p->rightchild;
-		}
-		else //x < p->data
-		{
-			//parent = p;
-			p = p->leftchild;
-		}
-	}
-	if (p == 0)  //没找到
-		return false;
-	if (p->leftchild != 0 && p->rightchild != 0)
-	{
-		temp = p->rightchild;
-		while (temp->leftchild != 0)
-			temp = temp->leftchild;
-		p->data = temp->data;
-		delete temp;
-	}
-	else
-	{
-		temp = p;
-		//连接右子树或将其置空
-		if (p->leftchild == 0)
-			p = p->rightchild;
-		else
-			p = p->leftchild;
-		delete temp;		
-	}
-	return true;
-}
-
-
-
 
 
 template<class T>
@@ -337,6 +297,76 @@ void BST<T>::PrintBinTree(BSTNode<T> * BT)
 		
 	}
 }
+
+
+
+
+
+template<class T>
+void BST<T>::InOrder()
+{
+	InOrder(root);
+	cout << endl;
+}
+
+
+
+
+template<class T>
+void BST<T>::InOrder(BSTNode<T>* subtree)
+{
+	if (subtree != 0)
+	{
+		InOrder(subtree->leftchild);
+		cout << subtree->data << " ";
+		InOrder(subtree->rightchild);
+	}
+}
+
+
+
+
+
+
+template<class T>
+void BST<T>::InOrderNonRecursion()
+{
+	if (root == 0)
+	{
+		cout << "该树为空" << endl;
+		return;
+	}
+	stack<BSTNode<T>*>S;
+	BSTNode<T>* p = root;
+	while (p != 0 || !S.empty())
+	{
+		while (p != 0)
+		{
+			S.push(p);
+			p = p->leftchild;
+		}
+		if (!S.empty())
+		{
+			p = S.top();
+			S.pop();
+			cout << p->data << " ";
+			p = p->rightchild;
+		}
+	}
+	cout << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -402,19 +432,71 @@ int main()
 	cout << "以广义表输出树结点的值" << endl;
 	a.PrintBinTree();
 
-/*	
-	cout << endl << endl;
-	if (a.RemoveNonRecursion(36))
-		cout << "删除 36 成功" << endl;
-	else
-		cout << "删除 36 失败" << endl;
-	cout << endl;
-	cout << "以广义表输出树结点的值" << endl;
-	a.PrintBinTree();
-*/
+	cout << "中序遍历" << endl;
+	a.InOrder();
+
+	cout << "非递归中序遍历" << endl;
+	a.InOrderNonRecursion();
+
 	cout << endl;
 	system("pause");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
