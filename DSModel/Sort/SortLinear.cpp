@@ -3,34 +3,39 @@
 //
 #include <iostream>
 #include <random>
-#include <ctime>
+#include <queue>
+#include "myClock.h"
+#include "MinHeap.h"
+
 const int MatchMax = 99999;
 
 using namespace std;
 
-class myClock {
-public:
-    void start() {
-        cout << "开始计时" << endl;
-        t1 = clock();
-    }
 
-    void end() {
-        t2 = clock();
-        cout << "经过时间 " << (double) (t2 - t1) / 1000 << "s" << endl;
-        cout << endl;
-    }
+//锦标赛排序用到,不过暂时锦标赛排序代码没写成功
+template<class T>
+struct MatchNode {
+    T data;
+    int id;
 
-private:
-    long t1;
-    long t2;
+    explicit MatchNode(T n = MatchMax, int id = -1) : data(n), id(id) {}
 };
 
-//锦标赛排序用到
-struct MatchNode{
-    int data;
-    int id;
-    explicit MatchNode(int n = MatchMax, int id = -1):data(n),id(id){}
+//桶排序要用到
+template<class T>
+struct NumNode {
+    T data;
+    NumNode *link;
+
+    NumNode() : link(nullptr) { data = T(); }
+};
+
+//桶排序要用到
+template<class T>
+struct Bucket {
+    NumNode<T> *adj;
+
+    Bucket() : adj(nullptr) {}
 };
 
 
@@ -57,11 +62,23 @@ public:
 
     void QuickSort();
 
-    void ShellSort();
+    void ShellSort();//希尔排序
 
     void SelectSort();
 
-    void MatchSort();//锦标赛排序
+//    void MatchSort(); 锦标赛排序
+
+    void BucketSort(T minNum, T MaxNum);//桶排序
+
+    void CountSort(T minNum, T MaxNum);//计数排序
+
+    void HeapSort();//堆排序
+
+    void MSDSort(int digits);//基数排序
+
+    void MergeSort();//归并排序
+
+    void MergeSort(int left, int right);
 
 
 private:
@@ -73,6 +90,8 @@ private:
     void swap(int i, int j);
 
     void QuickSort(int low, int high);
+
+    void Merge(int l, int m, int r);
 };
 
 template<class T>
@@ -92,7 +111,6 @@ LinearSort<T>::LinearSort(T *a, int n) {
 
 template<class T>
 LinearSort<T>::~LinearSort() {
-    if (array != nullptr)
         delete array;
 }
 
@@ -258,7 +276,7 @@ void LinearSort<T>::swap(int i, int j) {
 template<class T>
 void LinearSort<T>::ShellSort() {
     int i, j, gap;
-    gap = currentSize/ 2;
+    gap = currentSize / 2;
     while (gap >= 1) {
         for (i = gap; i < currentSize; i++) {
             array[currentSize] = array[i]; //array[currentSize]为浪费的空间
@@ -314,8 +332,8 @@ void LinearSort<T>::SelectSort() {
     }
 }
 
-template<class T>
-void LinearSort<T>::MatchSort() {
+//template<class T>
+//void LinearSort<T>::MatchSort() {
 //    int nodeNum = 1;
 //    MatchNode *tree;
 //    while(nodeNum < currentSize){
@@ -351,20 +369,200 @@ void LinearSort<T>::MatchSort() {
 //            if(tree[j].data)
 //        }
 //    }
+//}
+
+//包括minNum,但不包括maxNum,范围够用时候范围给的越小越省空间
+template<class T>
+void LinearSort<T>::BucketSort(T minNum, T maxNum) {
+    int bucketNum = maxNum - minNum;
+    auto *bucket = new Bucket<T>[bucketNum];
+    int i;
+    NumNode<T> *p = nullptr, *q = nullptr;
+    //浪费一个空间使算法统一
+    for (i = 0; i < bucketNum; i++)
+        bucket[i].adj = new NumNode<T>;
+
+    int location = -1;
+    for (i = 0; i < currentSize; i++) {
+        location = array[i] - minNum;
+        p = bucket[location].adj;
+        q = new NumNode<T>;
+        q->data = array[i];
+        q->link = p->link;
+        p->link = q;
+    }
+
+    int count = 0;
+    for (i = 0; i < bucketNum; i++) {
+        p = bucket[i].adj->link;
+        while (p != nullptr) {
+            cout << p->data << " ";
+            array[count++] = p->data;
+            p = p->link;
+        }
+        if (count == currentSize)
+            break; //已经存完元素了
+    }
+
+    cout << endl;
+}
+
+//适合重复数据多并且不必保存其他信息的情况
+//包括minNum,但不包括maxNum,范围够用时候范围给的越小越省空间
+template<class T>
+void LinearSort<T>::CountSort(T minNum, T MaxNum) {
+    int bucketNum = MaxNum - minNum;
+    T bucket[bucketNum];
+
+    int i, count = 0;
+    for (i = 0; i < bucketNum; i++)
+        bucket[i] = 0;
+    for (i = 0; i < currentSize; i++)
+        bucket[array[i] - minNum]++;
+    for (i = 0; i < bucketNum; i++) {
+        while (bucket[i] > 0) {
+            array[count] = i + minNum;
+            cout << array[count] << " ";
+            count++;
+            bucket[i]--;
+        }
+        if (count == currentSize)
+            break; //放完数了，收工
+    }
+    cout << endl;
+}
+
+template<class T>
+void LinearSort<T>::HeapSort() {
+    MinHeap<T> hp(array, currentSize);
+    for(int i = 0; i <currentSize; i++){
+        hp.RemoveMin(array[i]);
+    }
+}
+
+//digit为最高位，example：999 --> digit=3
+template<class T>
+void LinearSort<T>::MSDSort(int digits) {
+    queue<T> bucket[10];
+    //当然也可以合并到上面，不过这里为了直观
+    //就单独拿出来了，取名为line
+    queue<T> line;
+    int weight, i;
+    T bucketNum, data;
+
+    for (i = 0; i < currentSize; i++) {
+        line.push(array[i]);
+    }
+
+    for (int times = 1; times <= digits; times++) {
+        //求比该位大一位数的权值
+        weight = 1;
+        for (i = 1; i < times; i++)
+            weight = 10 * weight;
+
+        while (!line.empty()) {
+            data = line.front();
+            line.pop();
+            bucketNum = (data / weight) % 10;
+            bucket[bucketNum].push(data);
+        }
+        cout << "第 " << times << "次: ";
+        for (i = 0; i < 10; i++) {
+            while (!bucket[i].empty()) {
+                data = bucket[i].front();
+                cout << data << " ";
+                bucket[i].pop();
+                line.push(data);
+            }
+        }
+        cout << endl;
+    }
+
+    cout << "最终结果: " << endl;
+    i = 0;
+    while (!line.empty()) {
+        data = line.front();
+        line.pop();
+        cout << data << " ";
+        array[i++] = data;
+    }
+    cout << endl;
+}
+
+template<class T>
+void LinearSort<T>::MergeSort() {
+    MergeSort(0, currentSize - 1);
+}
+
+template<class T>
+void LinearSort<T>::MergeSort(int left, int right) {
+    if (left == right)
+        return;
+    int mid = (left + right) / 2;
+    MergeSort(left, mid);
+    MergeSort(mid + 1, right);
+    Merge(left, mid, right);
+}
+
+template<class T>
+void LinearSort<T>::Merge(int l, int m, int r) {
+    int n = r - l + 1, i = 0;
+    T* temp = new T[n];
+    int left = l;
+    int right = m + 1;
+    while(left <= m && right <= r){
+        if(array[left] <= array[right])
+            temp[i++] = array[left++];
+        else
+            temp[i++] = array[right++];
+    }
+    while(left <= m){
+        temp[i++] = array[left++];
+    }
+    while(right <= r){
+        temp[i++] = array[right++];
+    }
+    for(i = 0; i < n; i++)
+        array[l + i] = temp[i];
+    delete[] temp;
 }
 
 
 int main() {
     int test1[10] = {9, 8, 3, 7, 1, 6, 0, 5, 2, 4};
-    int test2[10] = {9, 1, 2, 3, 4, 5, 6, 7, 8, 0};
+    int test2[11] = {499, 158, 263, 348, 435, 575, 614, 758, 685, 10, 614};
+    int test4[11] = {9, 1, 2, 3, 4, 5, 6, 7, 8, 0, 5};
+    int test5[10] = {5, 3, 6, 7, 5, 3, 6, 8, 8, 3};
     int test3[10];
-    for (int i = 0; i < 10; i++)
+    srand(time(nullptr));
+    for (int i = 0; i < 15; i++)
         test3[i] = (int) (rand() % 1000);
 
+
     LinearSort<int> linear1;
-    linear1.changeArray(test1, 10);
-    linear1.BubbleSort();
+    linear1.changeArray(test3, 15);
+//    linear1.MergeSort();
+//    linear1.printArray();
+
+    linear1.HeapSort();
     linear1.printArray();
+
+
+//    linear1.changeArray(test2, 11);
+//    linear1.MSDSort(4);
+
+//    linear1.changeArray(test5, 10);
+//    linear1.CountSort(1, 12);
+//    linear1.printArray();
+
+
+//    linear1.changeArray(test4, 10);
+//    linear1.BucketSort(0,10);
+//    linear1.printArray();
+
+//    linear1.changeArray(test1, 8);
+//    linear1.BubbleSort();
+//    linear1.printArray();
 
 //    cout << endl << "插入排序" << endl;
 //    linear1.changeArray(test1, 10);
