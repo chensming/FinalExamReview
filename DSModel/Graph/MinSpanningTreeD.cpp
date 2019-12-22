@@ -23,14 +23,14 @@ struct MSTEdgeNode {
 
 template<class T, class E>
 bool cmp(const MSTEdgeNode<T, E> &a, const MSTEdgeNode<T, E> &b) {
-    return a.cost < b.cost;  //ÉıĞò
+    return a.cost < b.cost;  //å‡åº
 }
 
 
 template<class T, class E>
 struct Edge {
-    int dest;    //±ßµÄÁíÒ»¸ö¶¥µãÎ»ÖÃ
-    E cost;            //±ßÉÏµÄÈ¨Öµ
+    int dest;    //è¾¹çš„å¦ä¸€ä¸ªé¡¶ç‚¹ä½ç½®
+    E cost;            //è¾¹ä¸Šçš„æƒå€¼
     Edge<T, E> *link;
 
     Edge() : dest(-1), cost(-1), link(nullptr) {}
@@ -71,7 +71,7 @@ public:
 
     void CreateNodeTable();
 
-    void PrintDest(); //°ÑÁÚ½Ó±íµÄÑù×ÓÊä³öÀ´
+    void PrintDest(); //æŠŠé‚»æ¥è¡¨çš„æ ·å­è¾“å‡ºæ¥
     void KruskalMinTree();
 
     void PrimMinTree();
@@ -80,7 +80,7 @@ public:
 
     void printMinTree();
 
-    //±éÀú
+    //éå†
     void DFS();
 
     void BFS();
@@ -90,10 +90,10 @@ private:
     int numVertices;
     int maxVertices;
     int numEdges;
-    bool *visited; //ÓÃÓÚdfsºÍbfs
+    bool *visited; //ç”¨äºdfså’Œbfs
 
-    Vertex<T, E> *NodeTable; //½áµã±í
-    MSTEdgeNode<T, E> *mst;//×îĞ¡Éú³ÉÊ÷Êı×é
+    Vertex<T, E> *NodeTable; //ç»“ç‚¹è¡¨
+    MSTEdgeNode<T, E> *mst;//æœ€å°ç”Ÿæˆæ ‘æ•°ç»„
 
     int getVertexPos(const T vertex) {
         for (int i = 0; i < numVertices; i++) {
@@ -117,7 +117,7 @@ GraphLinked<T, E>::GraphLinked(int sz) {
 
     NodeTable = new Vertex<T, E>[maxVertices];
     if (NodeTable == nullptr) {
-        cerr << "·Ö´æ·ÖÅä´íÎó" << endl;
+        cerr << "åˆ†å­˜åˆ†é…é”™è¯¯" << endl;
         exit(1);
     }
     for (int i = 0; i < maxVertices; i++) {
@@ -148,7 +148,7 @@ E GraphLinked<T, E>::getWeight(int v1, int v2) {
             p = p->link;
         }
         if (p != nullptr)
-            return p->cost;  //ÕÒµ½´Ë±ß,·µ»ØÈ¨Öµ
+            return p->cost;  //æ‰¾åˆ°æ­¤è¾¹,è¿”å›æƒå€¼
     }
     return 0;
 }
@@ -173,8 +173,8 @@ bool GraphLinked<T, E>::removeVertex(int v) {
     while (NodeTable[v].adj != nullptr) {
         p = NodeTable[v].adj;
         k = p->dest;
-        s = NodeTable[k].adj;  //ÕÒ¶Ô³Æ´æ·ÅµÄ±ß½áµã
-        t = nullptr;                 //t ÊÇ sµÄÇ°Ò»¸öÖ¸Õë£¬¸ú×Ås×ß£¬·½±ãºóĞøÉ¾³ı½áµã
+        s = NodeTable[k].adj;  //æ‰¾å¯¹ç§°å­˜æ”¾çš„è¾¹ç»“ç‚¹
+        t = nullptr;                 //t æ˜¯ sçš„å‰ä¸€ä¸ªæŒ‡é’ˆï¼Œè·Ÿç€sèµ°ï¼Œæ–¹ä¾¿åç»­åˆ é™¤ç»“ç‚¹
         while (s != nullptr && s->dest != v) {
             t = s;
             s = s->link;
@@ -192,21 +192,21 @@ bool GraphLinked<T, E>::removeVertex(int v) {
         numEdges--;
     }
 
-    numVertices--;   //Í¼µÄ¶¥µãÊı¼õ1
-    NodeTable[v].data = NodeTable[numVertices].data;  //ÓÃ×îºóÒ»¸ö½áµãÀ´Ìî²¹
+    numVertices--;   //å›¾çš„é¡¶ç‚¹æ•°å‡1
+    NodeTable[v].data = NodeTable[numVertices].data;  //ç”¨æœ€åä¸€ä¸ªç»“ç‚¹æ¥å¡«è¡¥
     p = NodeTable[v].adj = NodeTable[numVertices].adj;
     while (p != nullptr) {
         s = NodeTable[p->dest].adj;
         while (s != nullptr) {
             if (s->dest == numVertices) {
-                //½«Ô­±¾Óë±àºÅÎªnumVerticesµÄ¸ÃÎªv,ÒòÎªËüÒÑ¾­°áµ½vÁË
+                //å°†åŸæœ¬ä¸ç¼–å·ä¸ºnumVerticesçš„è¯¥ä¸ºv,å› ä¸ºå®ƒå·²ç»æ¬åˆ°väº†
                 s->dest = v;
                 break;
             } else
                 s = s->link;
         }
         ///////////////////////////////////////////////
-        //ÊéÖĞÃ»ÓĞÕâ¾ä´úÂë
+        //ä¹¦ä¸­æ²¡æœ‰è¿™å¥ä»£ç 
         p = p->link;
         //////////////////////////////////////////////
     }
@@ -222,7 +222,7 @@ bool GraphLinked<T, E>::insertEdge(int v1, int v2, E weight) {
         while (p != nullptr && p->dest != v2)
             p = p->link;
         if (p != nullptr)
-            return false; //ÒÑÓĞ´Ë±ß,·ñÔòp´ËÊ±±ØÎª0
+            return false; //å·²æœ‰æ­¤è¾¹,å¦åˆ™pæ­¤æ—¶å¿…ä¸º0
         p = new Edge<T, E>;
         q = new Edge<T, E>;
 
@@ -231,11 +231,11 @@ bool GraphLinked<T, E>::insertEdge(int v1, int v2, E weight) {
         q->dest = v1;
         q->cost = weight;
 
-        //Í·²åÈëv1µÄ±ßÁ´±í
+        //å¤´æ’å…¥v1çš„è¾¹é“¾è¡¨
         p->link = NodeTable[v1].adj;
         NodeTable[v1].adj = p;
 
-        //Í·²åÈëv2µÄ±ßÁ´±í
+        //å¤´æ’å…¥v2çš„è¾¹é“¾è¡¨
         q->link = NodeTable[v2].adj;
         NodeTable[v2].adj = q;
 
@@ -251,29 +251,29 @@ template<class T, class E>
 bool GraphLinked<T, E>::removeEdge(int v1, int v2) {
     if (v1 >= 0 && v1 < numVertices && v2 >= 0 && v2 < numVertices) {
         Edge<T, E> *p = NodeTable[v1].adj;
-        Edge<T, E> *q = 0, *s = p; //qÊÇpÉÏÒ»¸öÖ¸Õë,·½±ãÉ¾³ı²Ù×÷
+        Edge<T, E> *q = 0, *s = p; //qæ˜¯pä¸Šä¸€ä¸ªæŒ‡é’ˆ,æ–¹ä¾¿åˆ é™¤æ“ä½œ
 
         while (p != 0 && p->dest != v2) {
             q = p;
             p = p->link;
         }
         if (p != 0) {
-            if (p == s)    //ÒªÉ¾µÄ½áµã±»Í·Ö¸ÕëÖ¸×Å
+            if (p == s)    //è¦åˆ çš„ç»“ç‚¹è¢«å¤´æŒ‡é’ˆæŒ‡ç€
                 NodeTable[v1].adj = p->link;
             else
                 q->link = p->link;
             delete p;
         } else
-            return false; // p == 0£¬Ã»ÕÒµ½ÕâÌõ±ß
+            return false; // p == 0ï¼Œæ²¡æ‰¾åˆ°è¿™æ¡è¾¹
 
-        p = NodeTable[v2].adj;  //v2¶ÔÓ¦±ßÁ´±íÖĞÉ¾³ı
+        p = NodeTable[v2].adj;  //v2å¯¹åº”è¾¹é“¾è¡¨ä¸­åˆ é™¤
         q = 0;
         s = p;
         while (p->dest != v1) {
             q = p;
             p = p->link;
         }
-        if (p == s)   //ÒªÉ¾µÄ½áµã±»Í·Ö¸ÕëÖ¸×Å
+        if (p == s)   //è¦åˆ çš„ç»“ç‚¹è¢«å¤´æŒ‡é’ˆæŒ‡ç€
             NodeTable[v2].adj = p->link;
         else
             q->link = p->link;
@@ -289,7 +289,7 @@ int GraphLinked<T, E>::getFirstNeighbor(int v) {
     if (v >= 0 && v < numVertices) {
         Edge<T, E> *p = NodeTable[v].adj;
         if (p != nullptr)
-            return p->dest;//´æÔÚ£¬·µ»ØµÚÒ»¸öÁÙ½çµã
+            return p->dest;//å­˜åœ¨ï¼Œè¿”å›ç¬¬ä¸€ä¸ªä¸´ç•Œç‚¹
     }
     return -1;
 }
@@ -304,36 +304,36 @@ int GraphLinked<T, E>::getNextNeighbor(int v, int w) {
         if (p != nullptr && p->link != nullptr)
             return p->link->dest;
     }
-    return -1;  //-1´ú±í²»´æÔÚ
+    return -1;  //-1ä»£è¡¨ä¸å­˜åœ¨
 }
 
 
-//½¨Á¢ÁÚ½Ó±í½á¹¹
+//å»ºç«‹é‚»æ¥è¡¨ç»“æ„
 template<class T, class E>
 void GraphLinked<T, E>::CreateNodeTable() {
     int n, i, j, m;
     Edge<T, E> *p;
 
-    cout << "ÇëÊäÈëÒª´´½¨µÄ½áµã¸öÊı" << endl;
-    cin >> n; //½áµã¸öÊı
+    cout << "è¯·è¾“å…¥è¦åˆ›å»ºçš„ç»“ç‚¹ä¸ªæ•°" << endl;
+    cin >> n; //ç»“ç‚¹ä¸ªæ•°
     if (n > maxVertices) {
-        cout << "³¬¹ı×î´ó½áµãÊı" << endl;
+        cout << "è¶…è¿‡æœ€å¤§ç»“ç‚¹æ•°" << endl;
         return;
     }
     numVertices = n;
     for (i = 0; i < n; i++) {
-        NodeTable[i].adj = 0;  //Ô¤ÉèÎª¿ÕÁ´
-        cout << "ÇëÊäÈë±àºÅÎª " << i << "µÄ½áµãµÄÖµ: ";
+        NodeTable[i].adj = 0;  //é¢„è®¾ä¸ºç©ºé“¾
+        cout << "è¯·è¾“å…¥ç¼–å·ä¸º " << i << "çš„ç»“ç‚¹çš„å€¼: ";
         cin >> NodeTable[i].data;
 
-        cout << "ÇëÊäÈë" << NodeTable[i].data << "µÄÁÚ½Óµã¸öÊı£º";
+        cout << "è¯·è¾“å…¥" << NodeTable[i].data << "çš„é‚»æ¥ç‚¹ä¸ªæ•°ï¼š";
         cin >> m;
-        cout << "ÇëÊäÈëËüµÄ " << m << "¸öÁÚ½Óµã(ÏàÁÚ¶¥µã±àºÅ È¨ÖØ)" << endl;
+        cout << "è¯·è¾“å…¥å®ƒçš„ " << m << "ä¸ªé‚»æ¥ç‚¹(ç›¸é‚»é¡¶ç‚¹ç¼–å· æƒé‡)" << endl;
         for (j = 0; j < m; j++) {
             p = new Edge<T, E>;
             cin >> p->dest;
             cin >> p->cost;
-            //Í·²åÈë½¨Á´
+            //å¤´æ’å…¥å»ºé“¾
             p->link = NodeTable[i].adj;
             NodeTable[i].adj = p;
         }
@@ -360,7 +360,7 @@ void GraphLinked<T, E>::DFS() {
     for (int i = 0; i < numVertices; i++)
         visited[i] = false;
     int v0;
-    cout << "ÇëÊäÈëÉî¶ÈÓÅÏÈ±éÀúµÄ³ö·¢µã±àºÅ£º0ÖÁ " << numVertices - 1 << endl;
+    cout << "è¯·è¾“å…¥æ·±åº¦ä¼˜å…ˆéå†çš„å‡ºå‘ç‚¹ç¼–å·ï¼š0è‡³ " << numVertices - 1 << endl;
     cin >> v0;
     DFS(v0);
     cout << endl << endl;
@@ -375,7 +375,7 @@ void GraphLinked<T, E>::BFS() {
     int v;
     Edge<T, E> *p;
     queue<int> Q;
-    cout << "ÇëÊäÈë¹ã¶ÈÓÅÏÈ±éÀúµÄ³ö·¢µã±àºÅ£º0ÖÁ " << numVertices - 1 << endl;
+    cout << "è¯·è¾“å…¥å¹¿åº¦ä¼˜å…ˆéå†çš„å‡ºå‘ç‚¹ç¼–å·ï¼š0è‡³ " << numVertices - 1 << endl;
     cin >> v;
     Q.push(v);
 
@@ -401,8 +401,8 @@ template<class T, class E>
 void GraphLinked<T, E>::PrintDest() {
     Edge<T, E> *p;
     for (int i = 0; i < numVertices; i++) {
-        cout << "-----Óë" << "±àºÅÎª " << i << " ,ÖµÎª ";
-        cout << NodeTable[i].data << " ÏàÁ¬µÄµã : ¶¥µãÖµ(±àºÅ,È¨Öµ)" << endl;
+        cout << "-----ä¸" << "ç¼–å·ä¸º " << i << " ,å€¼ä¸º ";
+        cout << NodeTable[i].data << " ç›¸è¿çš„ç‚¹ : é¡¶ç‚¹å€¼(ç¼–å·,æƒå€¼)" << endl;
         p = NodeTable[i].adj;
         while (p != 0) {
             cout << NodeTable[p->dest].data;
@@ -431,7 +431,7 @@ void GraphLinked<T, E>::KruskalMinTree() {
     vector<MSTEdgeNode<T, E>> hp;
     UFsets fsets(numVertices);
 
-    //³õÊ¼»¯¹¤×÷
+    //åˆå§‹åŒ–å·¥ä½œ
     Edge<T, E> *edgePtr;
     for (int i = 0; i < numVertices; i++) {
         edgePtr = NodeTable[i].adj;
@@ -451,14 +451,14 @@ void GraphLinked<T, E>::KruskalMinTree() {
     sort_heap(hp.begin(), hp.end(), cmp<T, E>);
     display(hp);
 
-    int count = 1; //×îĞ¡Éú³ÉÊ÷¼ÆÊıÆ÷
+    int count = 1; //æœ€å°ç”Ÿæˆæ ‘è®¡æ•°å™¨
     while (count < numVertices) {
         leastNode = hp.front();
         hp.erase(hp.begin());
 
         int u = fsets.Find(leastNode.tail);
         int v = fsets.Find(leastNode.head);
-        if (u != v) { //²»»á²úÉú»ØÂ·
+        if (u != v) { //ä¸ä¼šäº§ç”Ÿå›è·¯
             fsets.Union(u, v);
             mst[count - 1] = leastNode;
             cout << leastNode.tail << "(" << NodeTable[leastNode.tail].data << ")->";
@@ -469,7 +469,7 @@ void GraphLinked<T, E>::KruskalMinTree() {
     }
     cout << endl;
     if (count == numVertices)
-        cout << "×îĞ¡Éú³ÉÊ÷Éú³É" << endl;
+        cout << "æœ€å°ç”Ÿæˆæ ‘ç”Ÿæˆ" << endl;
 }
 
 
@@ -488,11 +488,11 @@ void GraphLinked<T, E>::PrimMinTree() {
     for (int i = 0; i < numVertices; i++)
         visited[i] = false;
 
-    cout << "ÇëÊäÈë³ö·¢µã±àºÅ 0ÖÁ" << numVertices - 1 << endl;
+    cout << "è¯·è¾“å…¥å‡ºå‘ç‚¹ç¼–å· 0è‡³" << numVertices - 1 << endl;
     int u;
     cin >> u;
     if (u < 0 || u > numVertices - 1) {
-        cout << "ÊäÈëÓĞÎó" << endl;
+        cout << "è¾“å…¥æœ‰è¯¯" << endl;
         return;
     }
 
@@ -549,14 +549,14 @@ void GraphLinked<T, E>::Dijkstra() {
     int pos;
 
 
-    cout << "ÇëÊäÈë³ö·¢µã±àºÅ 0ÖÁ" << numVertices - 1 << endl;
+    cout << "è¯·è¾“å…¥å‡ºå‘ç‚¹ç¼–å· 0è‡³" << numVertices - 1 << endl;
     cin >> v0;
     if (v0 < 0 || v0 > numVertices - 1) {
-        cout << "ÊäÈëÓĞÎó" << endl;
+        cout << "è¾“å…¥æœ‰è¯¯" << endl;
         return;
     }
     dist[v0] = 0;
-    //³õÊ¼»¯¹¤×÷
+    //åˆå§‹åŒ–å·¥ä½œ
     Edge<T, E> *edgePtr = NodeTable[v0].adj;
     while (edgePtr != nullptr) {
         dist[edgePtr->dest] = edgePtr->cost;
@@ -582,7 +582,7 @@ void GraphLinked<T, E>::Dijkstra() {
             edgePtr = edgePtr->link;
         }
     }
-    cout << NodeTable[v0].data << "µ½ÆäËûµãµÄ×î¶Ì¾àÀë·Ö±ğÎª" << endl;
+    cout << NodeTable[v0].data << "åˆ°å…¶ä»–ç‚¹çš„æœ€çŸ­è·ç¦»åˆ†åˆ«ä¸º" << endl;
     for (int i = 0; i < numVertices; i++)
         cout << "To--" << NodeTable[i].data << ":" << dist[i] << "  ";
 
@@ -593,7 +593,7 @@ void GraphLinked<T, E>::Dijkstra() {
 
 
 template<class T, class E>
-void display(vector<MSTEdgeNode<T, E>> &v)//Ê¹ÓÃvectorµü´úÆ÷±éÀú
+void display(vector<MSTEdgeNode<T, E>> &v)//ä½¿ç”¨vectorè¿­ä»£å™¨éå†
 {
     //vector<MSTEdgeNode<T, E> >::iterator iter;
     for (auto iter = v.begin(); iter < v.end(); iter++) {
@@ -606,7 +606,7 @@ void display(vector<MSTEdgeNode<T, E>> &v)//Ê¹ÓÃvectorµü´úÆ÷±éÀú
 template<class T, class E>
 void GraphLinked<T, E>::printMinTree() {
     if (mst == 0) {
-        cout << "×îĞ¡Éú³ÉÊ÷Îª¿Õ" << endl;
+        cout << "æœ€å°ç”Ÿæˆæ ‘ä¸ºç©º" << endl;
         return;
     }
     for (int i = 0; i < numVertices - 1; i++)
@@ -618,9 +618,9 @@ int main() {
     GraphLinked<char, double> a;
     //a.CreateNodeTable();
 
-    //°ÑÍ¼ÏÈ½¨Á¢ÆğÀ´
+    //æŠŠå›¾å…ˆå»ºç«‹èµ·æ¥
 
-    //ÏÈ²åÈë¶¥µã
+    //å…ˆæ’å…¥é¡¶ç‚¹
     a.insertVertex('a');
     a.insertVertex('b');
     a.insertVertex('c');
