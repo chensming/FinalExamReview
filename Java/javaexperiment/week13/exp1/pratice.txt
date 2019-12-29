@@ -1,0 +1,7 @@
+
+
+实验后的练习：
+在WordThread类中增加int型的成员time，其初值为6000，
+将其中的【代码1】更改为线程中断time毫秒。
+在WordThread类增加public void setTime(int n)方法，
+使得WordThread线程对象可以调用该方法修改time的值。

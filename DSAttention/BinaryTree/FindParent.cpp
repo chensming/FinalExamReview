@@ -1,4 +1,17 @@
-bool Getancestors(BTreeNode *t)
+#include <iostream>
+using namespace std;
+
+struct BTreeNode{
+    int data;  
+    BTreeNode* leftchild;
+    BTreeNode *rightchild;
+};
+
+
+int ancestors[50];
+int pos = 0;
+
+bool Getancestors(BTreeNode *t, int x)
 {
     if( t == 0 ) 
         return false;
@@ -17,7 +30,9 @@ bool Getancestors(BTreeNode *t)
 void main()
 {
     //........
-    if(Getancestors(t))
+    BTreeNode *t;
+    int x;
+    if(Getancestors(t, x))
     {
         cout << "found!";
         if(pos == 0)

@@ -1,0 +1,5 @@
+
+
+实验后练习：
+在Planet类中再增加一个Mycanvas对象greenBall和一个Thread对象Satellite，
+线程Satellite占有CPU资源期间可以让greenBall画布旋转。
